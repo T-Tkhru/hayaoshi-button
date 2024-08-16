@@ -4,13 +4,20 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 interface HayaoshiProps {
-  href: string;
+  member?: number;
+  names?: string[];
+  key?: string[];
+  handicap?: number[];
 }
 
-const Hayaoshi = (props: HayaoshiProps) => {
+const Hayaoshi: React.FC<HayaoshiProps> = ({
+  member = 4,
+  names = ["aaaaa", "bbbbb", "ccccc", "ddddd"],
+  key = ["A", "S", "D", "F"],
+  handicap = [0, 0, 0, 0],
+}) => {
   const [items, setItems] = useState<string[]>([]);
-  const [collect, setCollect] = useState<number[]>([0, 0, 0, 0]); // 四人の正解数を格納する配列
-  const player: { [key: string]: number } = { A: 0, S: 1, D: 2, F: 3 };
+  const [collect, setCollect] = useState<number[]>(Array(member).fill(0)); // 四人の正解数を格納する配列
 
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null); // 新しい ref を追加
@@ -40,24 +47,16 @@ const Hayaoshi = (props: HayaoshiProps) => {
   const answer = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const key = e.code;
 
-    if (
-      key === "Digit1" &&
-      items.length > 0 &&
-      player.hasOwnProperty(items[0])
-    ) {
+    if (key === "Digit1" && items.length > 0) {
       setCollect((prevCollect) => {
         const newCollect = [...prevCollect];
-        newCollect[player[items[0]]] += 1;
+        newCollect[names.indexOf(items[0])] += 1;
         return newCollect;
       });
       setItems([]);
     }
 
-    if (
-      key === "Digit2" &&
-      items.length > 0 &&
-      player.hasOwnProperty(items[0])
-    ) {
+    if (key === "Digit2" && items.length > 0) {
       setItems((prevItems) => prevItems.slice(1));
     }
   };
@@ -87,7 +86,7 @@ const Hayaoshi = (props: HayaoshiProps) => {
             <ul className="flex space-x-3 w-auto">
               {items.map((item, index) => (
                 <li key={index} className="text-2xl">
-                  {index + 1} : player{player[item] + 1}
+                  {index + 1} : player{names.indexOf(item) + 1}
                 </li>
               ))}
             </ul>
