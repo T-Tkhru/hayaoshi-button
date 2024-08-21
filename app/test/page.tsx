@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Input from "./Input";
+import Hayaoshi from "../components/Hayaoshi";
 
 export default function Page() {
   // playernameという配列を状態として定義
@@ -22,23 +23,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1>Player Names</h1>
-      <Input
-        addName={addPlayerName}
-        addHandicap={addHandicap}
-        addKey={addKey}
-      />
-      <ul>
-        {names.map((name, index) => (
-          <li key={index}>{name}</li>
-        ))}
-        {key.map((key, index) => (
-          <li key={index}>{key}</li>
-        ))}
-        {handicap.map((handicap, index) => (
-          <li key={index}>{handicap}</li>
-        ))}
-      </ul>
+      <Hayaoshi />
     </div>
   );
 }

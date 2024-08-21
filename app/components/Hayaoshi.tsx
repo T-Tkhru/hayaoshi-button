@@ -6,15 +6,15 @@ import { useEffect, useRef, useState } from "react";
 interface HayaoshiProps {
   member?: number;
   names?: string[];
-  key?: string[];
+  keys?: string[];
   handicap?: number[];
 }
 
 const Hayaoshi: React.FC<HayaoshiProps> = ({
   member = 4,
   names = ["aaaaa", "bbbbb", "ccccc", "ddddd"],
-  key = ["A", "S", "D", "F"],
-  handicap = [0, 0, 0, 0],
+  keys = ["A", "S", "D", "F"],
+  handicap = [0.3, 0, 0, 0],
 }) => {
   const [items, setItems] = useState<string[]>([]);
   const [collect, setCollect] = useState<number[]>(Array(member).fill(0)); // 四人の正解数を格納する配列
@@ -22,41 +22,39 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null); // 新しい ref を追加
 
-  const keyDownHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const key = e.code;
+  // 動的なキー処理
+  const keyHandlerMap: { [key: string]: () => void } = {};
 
-    if (key === "KeyA") {
+  // keys 配列に基づいて keyHandlerMap を生成
+  keys.forEach((key, index) => {
+    const delay = (handicap[index] || 0) * 1000; // `handicap` 配列から遅延時間を取得
+    keyHandlerMap[key.toLowerCase()] = () => {
       setTimeout(() => {
-        setItems((prevItems) => [...prevItems, "A"]);
-      }, 2000);
-    }
+        setItems((prevItems) => [...prevItems, key]);
+      }, delay);
+    };
+  });
 
-    if (key === "KeyS") {
-      setItems((prevItems) => [...prevItems, "S"]);
-    }
-
-    if (key === "KeyD") {
-      setItems((prevItems) => [...prevItems, "D"]);
-    }
-
-    if (key === "KeyF") {
-      setItems((prevItems) => [...prevItems, "F"]);
+  const keyDownHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const key = e.key.toLowerCase(); // 小文字に変換して比較
+    if (keyHandlerMap[key]) {
+      keyHandlerMap[key](); // マッピングされた関数を呼び出す
     }
   };
 
   const answer = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const key = e.code;
+    const key = e.key;
 
-    if (key === "Digit1" && items.length > 0) {
+    if (key === "1" && items.length > 0) {
       setCollect((prevCollect) => {
         const newCollect = [...prevCollect];
-        newCollect[names.indexOf(items[0])] += 1;
+        newCollect[keys.indexOf(items[0])] += 1;
         return newCollect;
       });
       setItems([]);
     }
 
-    if (key === "Digit2" && items.length > 0) {
+    if (key === "2" && items.length > 0) {
       setItems((prevItems) => prevItems.slice(1));
     }
   };
@@ -71,7 +69,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
   return (
     <>
       <div
-        className="h-screen bg-green-400"
+        className="bg-green-400"
         tabIndex={0}
         onKeyDown={keyDownHandler}
         ref={containerRef}
@@ -86,7 +84,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
             <ul className="flex space-x-3 w-auto">
               {items.map((item, index) => (
                 <li key={index} className="text-2xl">
-                  {index + 1} : player{names.indexOf(item) + 1}
+                  {index + 1} :{names[keys.indexOf(item)]}
                 </li>
               ))}
             </ul>
@@ -97,7 +95,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
           <ul className="flex space-x-2">
             {collect.map((count, index) => (
               <li key={index}>
-                Player {index + 1}: {count}
+                {names[index]}: {count}
               </li>
             ))}
           </ul>
