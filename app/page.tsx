@@ -50,6 +50,7 @@ export default function Home() {
     setKey([]);
     setHandicap([]);
     setResult([]);
+    setMember("2");
   };
 
   const deletePlayerName = (index: number) => {
@@ -176,7 +177,6 @@ export default function Home() {
               handicap={handicap}
               finish={setDisplayResult}
             />
-            {/* このままだとフィニッシュの後にプレイヤー情報がキープされる、リセットするかそのまま残すかを選べる選択肢が欲しい。この状態でもstartボタンは押せるようになってる */}
           </div>
         )}
         {display === 2 && (
