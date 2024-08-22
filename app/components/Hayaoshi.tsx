@@ -8,6 +8,7 @@ interface HayaoshiProps {
   names?: string[];
   keys?: string[];
   handicap?: number[];
+  finish: (collect: number[]) => void;
 }
 
 const Hayaoshi: React.FC<HayaoshiProps> = ({
@@ -15,6 +16,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
   names = ["aaaaa", "bbbbb", "ccccc", "ddddd"],
   keys = ["A", "S", "D", "F"],
   handicap = [0.3, 0, 0, 0],
+  finish,
 }) => {
   const [items, setItems] = useState<string[]>([]);
   const [collect, setCollect] = useState<number[]>(Array(member).fill(0)); // 四人の正解数を格納する配列
@@ -30,7 +32,12 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
     const delay = (handicap[index] || 0) * 1000; // `handicap` 配列から遅延時間を取得
     keyHandlerMap[key.toLowerCase()] = () => {
       setTimeout(() => {
-        setItems((prevItems) => [...prevItems, key]);
+        setItems((prevItems) => {
+          if (!prevItems.includes(key)) {
+            return [...prevItems, key];
+          }
+          return prevItems;
+        });
       }, delay);
     };
   });
@@ -45,7 +52,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
   const answer = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const key = e.key;
 
-    if (key === "1" && items.length > 0) {
+    if (key === "Enter" && items.length > 0) {
       setCollect((prevCollect) => {
         const newCollect = [...prevCollect];
         newCollect[keys.indexOf(items[0])] += 1;
@@ -54,9 +61,13 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
       setItems([]);
     }
 
-    if (key === "2" && items.length > 0) {
+    if (key === "Backspace" && items.length > 0) {
       setItems((prevItems) => prevItems.slice(1));
     }
+  };
+
+  const Finish = () => {
+    finish(collect);
   };
 
   useEffect(() => {
@@ -99,6 +110,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
               </li>
             ))}
           </ul>
+          <button onClick={Finish}>Finish!!!</button>
         </div>
       </div>
     </>

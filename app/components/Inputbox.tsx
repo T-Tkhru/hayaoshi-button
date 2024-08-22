@@ -5,6 +5,7 @@ interface InputProps {
   addKey: (key: string) => void;
   addHandicap: (handicap: number) => void;
   checkDuplicate: (name: string, key: string) => number;
+  onSubmit: () => void;
 }
 
 const Inputbox: React.FC<InputProps> = ({
@@ -12,11 +13,12 @@ const Inputbox: React.FC<InputProps> = ({
   addKey,
   addHandicap,
   checkDuplicate,
+  onSubmit,
 }) => {
   const [name, setName] = useState<string>("");
   const [key, setKey] = useState<string>("");
   const [handicap, setHandicap] = useState<string>("0"); // 初期値を空文字に設定
-  const [submitCheck, setSubmitCheck] = useState<boolean>(false);
+  // const [submitCheck, setSubmitCheck] = useState<boolean>(false);
   const [error, setError] = useState<number>(0); // エラーの状態,1:名前が重複,2:ボタンが重複
 
   const nameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +45,10 @@ const Inputbox: React.FC<InputProps> = ({
         addName(name);
         addKey(key);
         addHandicap(Number(handicap));
-        setSubmitCheck(true);
+        onSubmit();
+        setName("");
+        setKey("");
+        setHandicap("0");
       } else if (check === 1) {
         //名前が重複している場合
         setError(1);
@@ -58,48 +63,37 @@ const Inputbox: React.FC<InputProps> = ({
 
   return (
     <>
-      {submitCheck ? (
-        <div>
-          <h2>プレイヤー名</h2>
-          <p>{name}</p>
-          <h2>ボタン</h2>
-          <p>{key}</p>
-          <h2>ハンデ</h2>
-          <p>{handicap}秒</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <h2>プレイヤー名</h2>
-          <input
-            type="text"
-            value={name}
-            onChange={nameChange}
-            className=""
-            placeholder="プレイヤー名を入力"
-          />
-          {error === 1 && <p style={{ color: "red" }}>重複しています</p>}
-          <h2>ボタンとなるキー</h2>
-          <input
-            type="text"
-            value={key}
-            onChange={keyChange}
-            className=""
-            placeholder="例:A"
-          />
-          {error === 2 && <p style={{ color: "red" }}>重複しています</p>}
-          <h2>ハンデ（秒単位で入力）</h2>
-          <input
-            type="text"
-            value={handicap === "0" ? "" : handicap} // 表示は空文字にする
-            onChange={handicapChange}
-            className=""
-            placeholder="入力なしは0 (例:0.4)"
-          />
-          <button className="ml-2" type="submit">
-            追加
-          </button>
-        </form>
-      )}
+      <form onSubmit={handleSubmit}>
+        <h2>プレイヤー名</h2>
+        <input
+          type="text"
+          value={name}
+          onChange={nameChange}
+          className=""
+          placeholder="プレイヤー名を入力"
+        />
+        {error === 1 && <p style={{ color: "red" }}>重複しています</p>}
+        <h2>ボタンとなるキー</h2>
+        <input
+          type="text"
+          value={key}
+          onChange={keyChange}
+          className=""
+          placeholder="例:A"
+        />
+        {error === 2 && <p style={{ color: "red" }}>重複しています</p>}
+        <h2>ハンデ（秒単位で入力）</h2>
+        <input
+          type="text"
+          value={handicap === "0" ? "" : handicap} // 表示は空文字にする
+          onChange={handicapChange}
+          className=""
+          placeholder="入力なしは0 (例:0.4)"
+        />
+        <button className="ml-2" type="submit">
+          追加
+        </button>
+      </form>
     </>
   );
 };

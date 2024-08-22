@@ -21,9 +21,13 @@ export default function Page() {
     setHandicap((prevHandicap) => [...prevHandicap, handicap]);
   };
 
+  const finish = (collect: number[]) => {
+    console.log(collect);
+  };
+
   return (
     <div>
-      <Hayaoshi />
+      <Hayaoshi finish={finish} />
     </div>
   );
 }
