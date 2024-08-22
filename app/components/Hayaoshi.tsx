@@ -80,7 +80,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
   return (
     <>
       <div
-        className="bg-green-400"
+        className="bg-green-400 w-full"
         tabIndex={0}
         onKeyDown={keyDownHandler}
         ref={containerRef}

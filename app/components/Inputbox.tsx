@@ -85,12 +85,15 @@ const Inputbox: React.FC<InputProps> = ({
         <h2>ハンデ（秒単位で入力）</h2>
         <input
           type="text"
-          value={handicap === "0" ? "" : handicap} // 表示は空文字にする
+          value={handicap}
           onChange={handicapChange}
           className=""
           placeholder="入力なしは0 (例:0.4)"
         />
-        <button className="ml-2" type="submit">
+        <button
+          className=" border-solid border-gray-400 border-2 mt-3 mx-auto block "
+          type="submit"
+        >
           追加
         </button>
       </form>
