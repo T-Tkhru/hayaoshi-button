@@ -49,6 +49,7 @@ const Inputbox: React.FC<InputProps> = ({
         setName("");
         setKey("");
         setHandicap("0");
+        setError(0);
       } else if (check === 1) {
         //名前が重複している場合
         setError(1);

@@ -5,7 +5,9 @@
 h1,
 h2,
 p,
-button {
+button,
+li,
+table {
   font-family: var(--font-stick);
 }
 

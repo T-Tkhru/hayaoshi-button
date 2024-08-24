@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Hayaoshi from "./components/Hayaoshi";
 import Inputbox from "./components/Inputbox";
 import Link from "next/link";
+import Result from "./components/Result";
 
 export default function Home() {
   const [member, setMember] = useState("2"); //プレイヤー数
@@ -73,23 +74,31 @@ export default function Home() {
     setSubmitCheck(false); // 新しいInputboxを表示
   };
 
-  const template = () => {
-    setMember("4");
-    setPlayerNames([
-      "プレイヤー1",
-      "プレイヤー2",
-      "プレイヤー3",
-      "プレイヤー4",
-    ]);
-    setKey(["A", "S", "D", "F"]);
-    setHandicap([0, 0, 0, 0]);
+  const templateNames = [
+    "プレイヤー1",
+    "プレイヤー2",
+    "プレイヤー3",
+    "プレイヤー4",
+    "プレイヤー5",
+    "プレイヤー6",
+    "プレイヤー7",
+    "プレイヤー8",
+    "プレイヤー9",
+    "プレイヤー10",
+  ];
+  const templateKeys = ["A", "S", "D", "F", "G", "H", "J", "K", "L", ";"];
+  const template = (n: number) => {
+    setMember(String(n));
+    setPlayerNames(templateNames.slice(0, n));
+    setKey(templateKeys.slice(0, n));
+    setHandicap(Array(n).fill(0));
     setDisplay(1);
   };
 
   return (
-    <div className="bg-gray-400 h-screen flex flex-col">
-      <div className="pagewrapper bg-white w-5/6 max-w-screen-lg mx-auto h-full my-5 flex-1">
-        {display === 0 && (
+    <div className="bg-gray-400 min-h-screen h-auto flex flex-col">
+      {display === 0 && (
+        <div className="pagewrapper bg-white w-5/6 max-w-screen-lg mx-auto h-full my-3 flex-1 rounded-xl">
           <div className="page">
             <div className="title&explanation text-center w-3/4 mx-auto">
               <h1 className="text-7xl my-4">早押しボタン</h1>
@@ -99,13 +108,18 @@ export default function Home() {
                   こちら
                 </Link>
               </p>
-
-              <button
-                className="bg-red-300 w-auto h-10 rounded-md"
-                onClick={template}
-              >
-                テンプレ
-              </button>
+              <p className="my-3">
+                テンプレ：
+                {[...Array(9)].map((_, index) => (
+                  <button
+                    key={index}
+                    className="bg-blue-500 text-white w-auto h-10 rounded-md px-3 py-1 mx-3 hover:opacity-80 duration-300 "
+                    onClick={() => template(index + 2)}
+                  >
+                    {index + 2}人
+                  </button>
+                ))}
+              </p>
             </div>
             <div className="inputarea mx-3">
               <p>人数は？</p>
@@ -122,6 +136,10 @@ export default function Home() {
                 <option value="4">4</option>
                 <option value="5">5</option>
                 <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
               </select>
               {names.length > Number(member) && (
                 <p style={{ color: "red" }}>プレイヤーを削除してください</p>
@@ -144,7 +162,7 @@ export default function Home() {
                   </li>
                 ))}
                 {names.length < Number(member) && !submitCheck && (
-                  <li className="pr-2 w-auto">
+                  <li className="pr-2 w-auto pb-2">
                     <Inputbox
                       addName={addPlayerName}
                       addHandicap={addHandicap}
@@ -158,7 +176,7 @@ export default function Home() {
               {names.length === Number(member) && (
                 <div className="flex justify-center">
                   <button
-                    className="bg-sky-300 w-auto h-10 rounded-md px-3 py-1 hover:opacity-80 duration-300"
+                    className="bg-blue-500 text-white w-auto h-10 rounded-md px-3 py-1 my-4 hover:opacity-80 duration-300"
                     onClick={setDisplayHayaoshi}
                   >
                     Start!!!
@@ -167,57 +185,26 @@ export default function Home() {
               )}
             </div>
           </div>
-        )}
-        {display === 1 && (
-          <div className="h-screen max-w-screen-lg">
-            <Hayaoshi
-              member={Number(member)}
-              names={names}
-              keys={keys}
-              handicap={handicap}
-              finish={setDisplayResult}
-            />
-          </div>
-        )}
-        {display === 2 && (
-          <div>
-            <h1>結果</h1>
-            <ul className="flex flex-wrap">
-              {names
-                .map((name, index) => ({ name, score: result[index] }))
-                .sort((a, b) => b.score - a.score) // 降順にソート
-                .map((player, index) => (
-                  <li key={index} className="p-2">
-                    <h2>プレイヤー名</h2>
-                    <p>{player.name}</p>
-                    <h2>点数</h2>
-                    <p>{player.score}</p>
-                  </li>
-                ))}
-            </ul>
-            <div className="flex justify-center space-x-2">
-              <button
-                className="bg-red-300 w-auto h-10 rounded-md"
-                onClick={setDisplayHayaoshi}
-              >
-                再戦
-              </button>
-              <button
-                className="bg-red-300 w-auto h-10 rounded-md"
-                onClick={setDisplayHome}
-              >
-                Homeに戻る（プレイヤー情報はリセットされます）
-              </button>
-              <button
-                className="bg-red-300 w-auto h-10 rounded-md"
-                onClick={setDisplayHome2}
-              >
-                メンバー変更
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
+      {display === 1 && (
+        <Hayaoshi
+          member={Number(member)}
+          names={names}
+          keys={keys}
+          handicap={handicap}
+          finish={setDisplayResult}
+        />
+      )}
+      {display === 2 && (
+        <Result
+          names={names}
+          result={result}
+          setDisplay={setDisplay}
+          setResult={setResult}
+          memberReset={memberReset}
+        />
+      )}
     </div>
   );
 }
