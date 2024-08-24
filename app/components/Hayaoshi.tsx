@@ -127,7 +127,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
                 {items.map((item, index) => {
                   if (index === 0) return null; // 1つ目の要素を飛ばす
                   return (
-                    <li key={item + index} className="text-xl px-3">
+                    <li key={index} className="text-xl px-3">
                       {index + 1} :{names[keys.indexOf(item)]}
                     </li>
                   );
@@ -139,6 +139,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
         <div className="playerWrapper flex flex-wrap w-full justify-center pt-4 px-4">
           {collect.map((count, index) => (
             <Hayaoshibutton
+              key={index}
               keyButton={keys[index]}
               name={names[index]}
               score={count}
