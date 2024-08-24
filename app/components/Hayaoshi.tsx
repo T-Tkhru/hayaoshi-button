@@ -127,7 +127,7 @@ const Hayaoshi: React.FC<HayaoshiProps> = ({
                 {items.map((item, index) => {
                   if (index === 0) return null; // 1つ目の要素を飛ばす
                   return (
-                    <li key={index} className="text-xl px-3">
+                    <li key={item + index} className="text-xl px-3">
                       {index + 1} :{names[keys.indexOf(item)]}
                     </li>
                   );
