@@ -17,22 +17,20 @@ const Inputbox: React.FC<InputProps> = ({
 }) => {
   const [name, setName] = useState<string>("");
   const [key, setKey] = useState<string>("");
-  const [handicap, setHandicap] = useState<string>("0"); // 初期値を空文字に設定
-  // const [submitCheck, setSubmitCheck] = useState<boolean>(false);
-  const [error, setError] = useState<number>(0); // エラーの状態,1:名前が重複,2:ボタンが重複
+  const [handicap, setHandicap] = useState<string>("0");
+  const [error, setError] = useState<number>(0);
 
   const nameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
-  const keyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setKey(event.target.value.toUpperCase()); // 大文字に変換
+  const keyChange = (key: string) => {
+    setKey(key.toUpperCase());
   };
 
   const handicapChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (!isNaN(Number(value))) {
-      // 入力値が数値の場合のみ設定
       setHandicap(value);
     }
   };
@@ -51,14 +49,51 @@ const Inputbox: React.FC<InputProps> = ({
         setHandicap("0");
         setError(0);
       } else if (check === 1) {
-        //名前が重複している場合
         setError(1);
         setName("");
       } else if (check === 2) {
-        //ボタンが重複している場合
         setError(2);
         setKey("");
       }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const forbiddenKeys = [
+      "Backspace",
+      "Enter",
+      "Escape",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8",
+      "F9",
+      "F10",
+      "F11",
+      "F12",
+      "Control",
+      "Alt",
+      "Meta",
+      "CapsLock",
+      "Insert",
+      "Process",
+      "PageUp",
+      "PageDown",
+      "End",
+      "Home",
+      "ArrowLeft",
+      "ArrowUp",
+      "ArrowRight",
+      "ArrowDown",
+    ]; // 禁止キー
+    if (forbiddenKeys.includes(e.key)) {
+      e.preventDefault(); // 禁止キーを防ぐ
+    } else {
+      keyChange(e.key);
     }
   };
 
@@ -78,9 +113,9 @@ const Inputbox: React.FC<InputProps> = ({
         <input
           type="text"
           value={key}
-          onChange={keyChange}
+          onKeyDown={handleKeyDown}
           className=""
-          placeholder="例:A"
+          placeholder="例:A(半角のみ)"
         />
         {error === 2 && <p style={{ color: "red" }}>重複しています</p>}
         <h2>ハンデ（秒単位で入力）</h2>

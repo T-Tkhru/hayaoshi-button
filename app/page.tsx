@@ -109,11 +109,11 @@ export default function Home() {
                 </Link>
               </p>
               <p className="my-3">
-                テンプレ：
+                QuickStart:
                 {[...Array(9)].map((_, index) => (
                   <button
                     key={index}
-                    className="bg-blue-500 text-white w-auto h-10 rounded-md px-3 py-1 mx-3 hover:opacity-80 duration-300 "
+                    className="bg-blue-500 text-white w-auto h-10 rounded-md px-3 py-1 mx-2 hover:opacity-80 duration-300 "
                     onClick={() => template(index + 2)}
                   >
                     {index + 2}人
